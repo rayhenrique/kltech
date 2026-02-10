@@ -26,13 +26,21 @@ const tipoColors: Record<string, string> = {
 export function ProductCard({ product }: { product: Product }) {
     return (
         <Card className="group flex flex-col overflow-hidden border border-border transition-all duration-300 hover:border-blue-accent/30 hover:shadow-lg">
-            {/* Image placeholder */}
+            {/* Image */}
             <div className="relative h-48 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-4xl font-bold text-muted-foreground/20">
-                        {product.titulo.slice(0, 2).toUpperCase()}
+                {product.image_url ? (
+                    <img
+                        src={product.image_url}
+                        alt={product.titulo}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-4xl font-bold text-muted-foreground/20">
+                            {product.titulo.slice(0, 2).toUpperCase()}
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className="absolute top-3 left-3">
                     <Badge
                         variant="outline"
