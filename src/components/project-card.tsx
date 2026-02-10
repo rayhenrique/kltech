@@ -42,7 +42,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 <div className="absolute top-3 left-3">
                     <Badge
                         variant="outline"
-                        className={`text-[10px] font-medium ${categoriaColors[project.categoria] || ""}`}
+                        className={`text-[10px] font-medium bg-white/90 backdrop-blur-sm shadow-sm ${categoriaColors[project.categoria] || ""}`}
                     >
                         {categoriaLabels[project.categoria] || project.categoria}
                     </Badge>

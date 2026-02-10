@@ -44,7 +44,7 @@ export function ProductCard({ product }: { product: Product }) {
                 <div className="absolute top-3 left-3">
                     <Badge
                         variant="outline"
-                        className={`text-[10px] font-medium ${tipoColors[product.tipo] || ""}`}
+                        className={`text-[10px] font-medium bg-white/90 backdrop-blur-sm shadow-sm ${tipoColors[product.tipo] || ""}`}
                     >
                         {tipoLabels[product.tipo] || product.tipo}
                     </Badge>
