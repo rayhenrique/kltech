@@ -117,82 +117,42 @@ npm run build
 
 ---
 
-## 8. Configurar o Processo com PM2
+## 8. Iniciar a Aplicação com PM2
 
-PM2 já está instalado na VPS. Criar o arquivo de configuração:
-
-```bash
-nano ecosystem.config.js
-```
-
-Cole:
-
-```js
-module.exports = {
-  apps: [
-    {
-      name: 'kltech',
-      script: 'node_modules/.bin/next',
-      args: 'start',
-      cwd: '/home/kltecnologia-com/htdocs/kltecnologia.com',
-      env: {
-        NODE_ENV: 'production',
-        PORT: 3002,
-      },
-    },
-  ],
-};
-```
-
-Salvar: `Ctrl+O` → `Enter` → `Ctrl+X`
-
-Iniciar a aplicação:
+Após o build (passo 7), inicie a aplicação com PM2:
 
 ```bash
-# Iniciar
-pm2 start ecosystem.config.js
+# Iniciar o Next.js em produção na porta 3002
+pm2 start npm --name "kltech" -- start -- -p 3002
 
-# Verificar se está rodando
-pm2 status
-
-# Ver logs em tempo real
-pm2 logs kltech
-
-# Salvar para reiniciar automaticamente após reboot
+# Salvar a lista de processos
 pm2 save
-pm2 startup
+
+# Verificar se está rodando (deve mostrar "online")
+pm2 status
 ```
 
-> [!IMPORTANT]
-> Se o `pm2 startup` mostrar um comando para executar como root, copie e execute como root (saia do usuário com `exit` primeiro).
+Agora configure o **auto-start** após reboot da VPS. Saia para root e execute:
+
+```bash
+# Sair para root (se estiver no usuário kltecnologia)
+exit
+
+# Gerar o serviço de startup
+pm2 startup systemd -u kltecnologia --hp /home/kltecnologia
+```
+
+> [!TIP]
+> Não precisa criar `ecosystem.config.js`. O flag `-p 3002` força a porta diretamente.
 
 ---
 
-## 9. Configurar Reverse Proxy no CloudPanel
+## 9. Verificar Reverse Proxy no CloudPanel
 
-O CloudPanel já configura um Nginx reverse proxy automaticamente para sites Node.js. Verifique se a porta está correta:
+O CloudPanel já configura o Nginx reverse proxy automaticamente. Apenas confirme:
 
 1. No CloudPanel, vá em **Sites → kltecnologia.com → Settings**
-2. Confirme que o **App Port** é `3000`
-3. Se precisar ajustar o Vhost, vá em **Sites → kltecnologia.com → Vhost**
-
-A configuração do Nginx deve ter algo como:
-
-```nginx
-location / {
-    proxy_pass http://127.0.0.1:3002;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_cache_bypass $http_upgrade;
-}
-```
-
-Se não estiver, adicione manualmente no Vhost e clique **Save**.
+2. Confirme que o **App Port** é `3002`
 
 ---
 
@@ -322,8 +282,9 @@ pm2 describe kltech | grep PORT
 cd htdocs/kltecnologia.com
 npm install
 npm run build
-pm2 start ecosystem.config.js
+pm2 start npm --name "kltech" -- start -- -p 3002
 pm2 save
+# Como root: pm2 startup systemd -u kltecnologia --hp /home/kltecnologia
 ```
 
 ## Checklist Final
