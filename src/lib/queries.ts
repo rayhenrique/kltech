@@ -61,6 +61,21 @@ export async function getProjects(): Promise<Project[]> {
     return data ?? [];
 }
 
+export async function getProjectById(id: string): Promise<Project | null> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error) {
+        console.error("Error fetching project:", error);
+        return null;
+    }
+    return data;
+}
+
 export async function getProducts(): Promise<Product[]> {
     const supabase = await createClient();
     const { data, error } = await supabase

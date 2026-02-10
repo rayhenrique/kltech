@@ -1,5 +1,8 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/project-card";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import type { Project } from "@/lib/queries";
 
 export function ProjectGrid({ projects }: { projects: Project[] }) {
@@ -26,6 +29,20 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
                     {projects.map((project) => (
                         <ProjectCard key={project.id} project={project} />
                     ))}
+                </div>
+
+                <div className="mt-10 flex justify-center">
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="lg"
+                        className="gap-2 rounded-full border-blue-accent/30 text-blue-accent hover:bg-blue-accent/5 hover:text-blue-accent"
+                    >
+                        <Link href="/projetos">
+                            Ver Todos os Projetos
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </Button>
                 </div>
             </div>
         </section>
