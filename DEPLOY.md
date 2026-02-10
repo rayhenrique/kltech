@@ -11,7 +11,7 @@ Guia completo para colocar o projeto Next.js no ar em `kltecnologia.com`.
 3. Preencha:
    - **Domain Name:** `kltecnologia.com`
    - **Node.js Version:** `18` ou `20` (recomendado 20)
-   - **App Port:** `3000`
+   - **App Port:** `3002` *(portas 3000, 3001 e 3360 já estão ocupadas)*
 4. Clique em **Create**
 
 > [!TIP]
@@ -92,6 +92,7 @@ Cole o conteúdo (use os valores reais do seu projeto Supabase):
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://xqsacaodrhxqqlrvjffp.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=SUA_ANON_KEY_AQUI
+PORT=3002
 ```
 
 Salvar: `Ctrl+O` → `Enter` → `Ctrl+X`
@@ -118,17 +119,7 @@ npm run build
 
 ## 8. Configurar o Processo com PM2
 
-O CloudPanel usa PM2 para gerenciar processos Node.js.
-
-```bash
-# Verificar se pm2 está instalado
-pm2 --version
-
-# Se não estiver, instalar globalmente
-npm install -g pm2
-```
-
-Criar o arquivo de configuração do PM2:
+PM2 já está instalado na VPS. Criar o arquivo de configuração:
 
 ```bash
 nano ecosystem.config.js
@@ -146,7 +137,7 @@ module.exports = {
       cwd: '/home/kltecnologia-com/htdocs/kltecnologia.com',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
+        PORT: 3002,
       },
     },
   ],
@@ -189,7 +180,7 @@ A configuração do Nginx deve ter algo como:
 
 ```nginx
 location / {
-    proxy_pass http://127.0.0.1:3000;
+    proxy_pass http://127.0.0.1:3002;
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection 'upgrade';
@@ -216,44 +207,115 @@ Acesse no navegador:
 
 ## 11. Atualizar o Projeto (Futuro)
 
-Sempre que fizer mudanças e der push no GitHub:
+Sempre que fizer mudanças locais e enviar ao GitHub, siga este fluxo para atualizar na VPS:
+
+### Passo 1 — No seu PC (Windows)
 
 ```bash
-# Acessar a VPS
-ssh root@IP_DA_SUA_VPS
-su - kltecnologia-com
-cd htdocs/kltecnologia.com
-
-# Puxar mudanças
-git pull origin main
-
-# Reinstalar deps (se mudou package.json)
-npm install
-
-# Rebuild
-npm run build
-
-# Reiniciar
-pm2 restart kltech
+# Commitar e enviar mudanças
+cd c:\xampp\htdocs\kltech
+git add -A
+git commit -m "feat: descrição da mudança"
+git push origin main
 ```
 
-> [!TIP]
-> Para facilitar, crie um script `deploy.sh`:
-> ```bash
-> #!/bin/bash
-> cd /home/kltecnologia-com/htdocs/kltecnologia.com
-> git pull origin main
-> npm install
-> npm run build
-> pm2 restart kltech
-> echo "✅ Deploy concluído!"
-> ```
-> Salve e dê permissão: `chmod +x deploy.sh`
-> Execute: `./deploy.sh`
+### Passo 2 — Na VPS (SSH)
+
+```bash
+# Conectar na VPS
+ssh root@IP_DA_SUA_VPS
+
+# Trocar para o usuário do site
+su - kltecnologia-com
+
+# Ir até o projeto
+cd htdocs/kltecnologia.com
+
+# Puxar as mudanças do GitHub
+git pull origin main
+
+# Reinstalar dependências (se mudou package.json)
+npm install
+
+# Refazer o build de produção
+npm run build
+
+# Reiniciar a aplicação
+pm2 restart kltech
+
+# Verificar se está rodando
+pm2 status
+```
+
+### Script Automático (Recomendado)
+
+Para não repetir todos os passos, crie um script na VPS:
+
+```bash
+nano ~/deploy-kltech.sh
+```
+
+Cole:
+
+```bash
+#!/bin/bash
+echo "🚀 Atualizando KL Tecnologia..."
+cd /home/kltecnologia-com/htdocs/kltecnologia.com
+
+echo "📥 Puxando mudanças do GitHub..."
+git pull origin main
+
+echo "📦 Instalando dependências..."
+npm install
+
+echo "🔨 Fazendo build de produção..."
+npm run build
+
+echo "♻️ Reiniciando aplicação..."
+pm2 restart kltech
+
+echo ""
+pm2 status
+echo ""
+echo "✅ Deploy concluído! Site atualizado."
+```
+
+Dar permissão e usar:
+
+```bash
+chmod +x ~/deploy-kltech.sh
+
+# Para atualizar, basta rodar:
+~/deploy-kltech.sh
+```
 
 ---
 
-## Resumo dos Comandos
+## Comandos Úteis na VPS
+
+```bash
+# Ver status de todos os processos PM2
+pm2 status
+
+# Ver logs em tempo real
+pm2 logs kltech
+
+# Ver últimas 100 linhas de log
+pm2 logs kltech --lines 100
+
+# Reiniciar aplicação
+pm2 restart kltech
+
+# Parar aplicação
+pm2 stop kltech
+
+# Verificar qual porta está sendo usada
+pm2 describe kltech | grep PORT
+```
+
+---
+
+## Resumo dos Comandos (Deploy Inicial)
 
 ```bash
 # Na VPS como usuário do site:
@@ -268,8 +330,9 @@ pm2 save
 
 - [ ] DNS apontando para o IP da VPS
 - [ ] SSL ativo (Let's Encrypt)
-- [ ] `.env.local` configurado com credenciais Supabase
+- [ ] `.env.local` configurado com credenciais Supabase + `PORT=3002`
 - [ ] `npm run build` sem erros
 - [ ] PM2 rodando (`pm2 status` mostra "online")
+- [ ] App Port no CloudPanel configurado como `3002`
 - [ ] Site acessível em `https://kltecnologia.com`
 - [ ] Admin acessível em `https://kltecnologia.com/admin`
