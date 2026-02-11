@@ -3,6 +3,9 @@ import { Footer } from "@/components/footer";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { ProductCard } from "@/components/product-card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { getProducts } from "@/lib/queries";
 
 export const revalidate = 3600;
@@ -24,9 +27,20 @@ export default async function ProdutosPage() {
                 <section className="bg-gradient-to-b from-muted/50 to-background py-16 sm:py-20">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         <div className="mx-auto max-w-2xl text-center">
+                            <Button
+                                asChild
+                                variant="ghost"
+                                size="sm"
+                                className="mb-8 gap-2 text-muted-foreground hover:text-foreground"
+                            >
+                                <Link href="/">
+                                    <ArrowLeft className="h-4 w-4" />
+                                    Voltar ao Início
+                                </Link>
+                            </Button>
                             <Badge
                                 variant="secondary"
-                                className="mb-4 rounded-full border border-blue-accent/20 bg-blue-accent/5 text-blue-accent"
+                                className="mb-4 rounded-full border border-blue-accent/20 bg-blue-accent/5 text-blue-accent block w-fit mx-auto"
                             >
                                 Vitrine
                             </Badge>
