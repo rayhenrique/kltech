@@ -1,29 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductCard } from "@/components/product-card";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Product } from "@/lib/queries";
 
-const filters = [
-    { value: "all", label: "Todos" },
-    { value: "script", label: "Scripts" },
-    { value: "automacao", label: "Automação" },
-    { value: "ebook", label: "E-books" },
-];
-
 export function ProductGrid({ products }: { products: Product[] }) {
-    const [activeFilter, setActiveFilter] = useState("all");
-
-    const filtered =
-        activeFilter === "all"
-            ? products
-            : products.filter((p) => p.tipo === activeFilter);
-
     return (
         <section id="vitrine" className="py-20 sm:py-28">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -43,26 +27,9 @@ export function ProductGrid({ products }: { products: Product[] }) {
                     </p>
                 </div>
 
-                {/* Tabs filter */}
-                <div className="mt-10 flex justify-center">
-                    <Tabs
-                        value={activeFilter}
-                        onValueChange={setActiveFilter}
-                        className="w-auto"
-                    >
-                        <TabsList className="bg-muted">
-                            {filters.map((f) => (
-                                <TabsTrigger key={f.value} value={f.value} className="text-sm">
-                                    {f.label}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
-                    </Tabs>
-                </div>
-
                 {/* Grid */}
-                <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {filtered.map((product) => (
+                <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {products.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
@@ -81,7 +48,7 @@ export function ProductGrid({ products }: { products: Product[] }) {
                     </Button>
                 </div>
 
-                {filtered.length === 0 && (
+                {products.length === 0 && (
                     <p className="mt-12 text-center text-muted-foreground">
                         Nenhum produto encontrado nesta categoria.
                     </p>
