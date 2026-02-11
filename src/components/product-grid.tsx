@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProductCard } from "@/components/product-card";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import type { Product } from "@/lib/queries";
 
 const filters = [
@@ -62,6 +65,20 @@ export function ProductGrid({ products }: { products: Product[] }) {
                     {filtered.map((product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
+                </div>
+
+                <div className="mt-10 flex justify-center">
+                    <Button
+                        asChild
+                        variant="outline"
+                        size="lg"
+                        className="gap-2 rounded-full border-blue-accent/30 text-blue-accent hover:bg-blue-accent/5 hover:text-blue-accent"
+                    >
+                        <Link href="/produtos">
+                            Ver Todos os Produtos
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </Button>
                 </div>
 
                 {filtered.length === 0 && (
