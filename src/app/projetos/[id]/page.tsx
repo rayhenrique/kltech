@@ -72,7 +72,7 @@ export default async function ProjetoPage({
                 </div>
 
                 {/* Content */}
-                <article className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+                <article className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                     {/* Image */}
                     {project.image_url ? (
                         <div className="overflow-hidden rounded-xl border border-border">

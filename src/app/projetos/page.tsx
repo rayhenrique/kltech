@@ -26,7 +26,7 @@ export default async function ProjetosPage() {
                 {/* Hero */}
                 <section className="bg-gradient-to-b from-muted/50 to-background py-16 sm:py-20">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="mx-auto max-w-2xl text-center">
+                        <div className="mx-auto max-w-2xl text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
                             <Button
                                 asChild
                                 variant="ghost"
@@ -59,11 +59,11 @@ export default async function ProjetosPage() {
                 <section className="py-12 sm:py-16">
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                         {projects.length === 0 ? (
-                            <p className="text-center text-muted-foreground">
+                            <p className="text-center text-muted-foreground animate-in fade-in duration-700">
                                 Nenhum projeto disponível no momento.
                             </p>
                         ) : (
-                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 fill-mode-both">
                                 {projects.map((project) => (
                                     <ProjectCard
                                         key={project.id}
