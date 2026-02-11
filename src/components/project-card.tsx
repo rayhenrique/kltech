@@ -26,68 +26,71 @@ const categoriaColors: Record<string, string> = {
 
 export function ProjectCard({ project }: { project: Project }) {
     return (
-        <Link href={`/projetos/${project.id}`} className="block">
-            <Card className="group flex h-full flex-col overflow-hidden border border-border transition-all duration-300 hover:border-blue-accent/30 hover:shadow-lg">
-                {/* Image */}
-                <div className="relative h-44 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-                    {project.image_url ? (
-                        <img
-                            src={project.image_url}
-                            alt={project.titulo}
-                            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                    ) : (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-4xl font-bold text-muted-foreground/20">
-                                {project.titulo.slice(0, 2).toUpperCase()}
-                            </div>
+        <Card className="group relative flex h-full flex-col overflow-hidden border border-border transition-all duration-300 hover:border-blue-accent/30 hover:shadow-lg">
+            {/* Stretched Link for main card click */}
+            <Link href={`/projetos/${project.id}`} className="absolute inset-0 z-0" prefetch={false}>
+                <span className="sr-only">Ver detalhes de {project.titulo}</span>
+            </Link>
+
+            {/* Image */}
+            <div className="relative h-44 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+                {project.image_url ? (
+                    <img
+                        src={project.image_url}
+                        alt={project.titulo}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-4xl font-bold text-muted-foreground/20">
+                            {project.titulo.slice(0, 2).toUpperCase()}
                         </div>
-                    )}
-                    <div className="absolute top-3 left-3">
-                        <Badge
-                            variant="outline"
-                            className={`text-[10px] font-medium bg-white/90 backdrop-blur-sm shadow-sm ${categoriaColors[project.categoria] || ""}`}
-                        >
-                            {categoriaLabels[project.categoria] || project.categoria}
-                        </Badge>
                     </div>
-                    {project.link && project.link !== "#" && (
-                        <span
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                window.open(project.link!, "_blank");
-                            }}
-                            className="absolute top-3 right-3 rounded-full bg-white/90 p-1.5 opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer"
-                        >
-                            <ExternalLink className="h-3.5 w-3.5 text-foreground" />
-                        </span>
-                    )}
+                )}
+                <div className="absolute top-3 left-3">
+                    <Badge
+                        variant="outline"
+                        className={`text-[10px] font-medium bg-white/90 backdrop-blur-sm shadow-sm ${categoriaColors[project.categoria] || ""}`}
+                    >
+                        {categoriaLabels[project.categoria] || project.categoria}
+                    </Badge>
                 </div>
+                {project.link && project.link !== "#" && (
+                    <span
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.link!, "_blank");
+                        }}
+                        className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-1.5 opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer hover:bg-white"
+                    >
+                        <ExternalLink className="h-3.5 w-3.5 text-foreground" />
+                    </span>
+                )}
+            </div>
 
-                <CardHeader className="pb-2">
-                    <CardTitle className="text-base font-semibold leading-snug text-foreground">
-                        {project.titulo}
-                    </CardTitle>
-                    <CardDescription className="line-clamp-2 text-sm text-muted-foreground">
-                        {project.descricao}
-                    </CardDescription>
-                </CardHeader>
+            <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold leading-snug text-foreground">
+                    {project.titulo}
+                </CardTitle>
+                <CardDescription className="line-clamp-2 text-sm text-muted-foreground">
+                    {project.descricao}
+                </CardDescription>
+            </CardHeader>
 
-                <CardContent className="mt-auto">
-                    <div className="flex flex-wrap gap-1.5">
-                        {project.stack_tecnica.map((tech) => (
-                            <Badge
-                                key={tech}
-                                variant="secondary"
-                                className="text-[10px] font-normal text-muted-foreground"
-                            >
-                                {tech}
-                            </Badge>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
-        </Link>
+            <CardContent className="mt-auto">
+                <div className="flex flex-wrap gap-1.5">
+                    {project.stack_tecnica.map((tech) => (
+                        <Badge
+                            key={tech}
+                            variant="secondary"
+                            className="text-[10px] font-normal text-muted-foreground"
+                        >
+                            {tech}
+                        </Badge>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     );
 }
