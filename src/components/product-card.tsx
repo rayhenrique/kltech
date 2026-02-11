@@ -85,21 +85,18 @@ export function ProductCard({ product }: { product: Product }) {
                         <span className="text-lg font-bold text-foreground">{product.preco}</span>
                     )}
                     <Button
-                        asChild
                         size="sm"
                         className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700"
                         onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
+                            if (product.whatsapp_link) {
+                                window.open(product.whatsapp_link, "_blank");
+                            }
                         }}
                     >
-                        <a
-                            href={product.whatsapp_link || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <MessageCircle className="h-3.5 w-3.5" />
-                            WhatsApp
-                        </a>
+                        <MessageCircle className="h-3.5 w-3.5" />
+                        WhatsApp
                     </Button>
                 </CardFooter>
             </Card>
