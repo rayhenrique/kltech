@@ -12,25 +12,31 @@ import {
 } from "@/components/ui/card";
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
-import type { Product } from "@/lib/queries";
+import type { Product } from "@/lib/types";
 
 const tipoLabels: Record<string, string> = {
     script: "Script",
     automacao: "Automação",
     ebook: "E-book",
+    digisat: "DigiSat",
+    plw: "PLW",
 };
 
 const tipoColors: Record<string, string> = {
     script: "bg-violet-50 text-violet-700 border-violet-200",
     automacao: "bg-emerald-50 text-emerald-700 border-emerald-200",
     ebook: "bg-amber-50 text-amber-700 border-amber-200",
+    digisat: "bg-blue-50 text-blue-700 border-blue-200",
+    plw: "bg-orange-50 text-orange-700 border-orange-200",
 };
 
 export function ProductCard({ product }: { product: Product }) {
+    const linkHref = product.slug ? `/produtos/${product.slug}` : `/produtos/${product.id}`;
+
     return (
         <Card className="group relative flex h-full flex-col overflow-hidden border border-border transition-all duration-300 hover:border-blue-accent/30 hover:shadow-lg">
             {/* Stretched Link for main card click */}
-            <Link href={`/produtos/${product.id}`} className="absolute inset-0 z-0" prefetch={false}>
+            <Link href={linkHref} className="absolute inset-0 z-0" prefetch={false}>
                 <span className="sr-only">Ver detalhes de {product.titulo}</span>
             </Link>
 

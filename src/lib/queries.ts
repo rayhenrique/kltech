@@ -1,27 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
+import type { Product, Project, Company } from "@/lib/types";
 
-export type Project = {
-    id: string;
-    titulo: string;
-    descricao: string;
-    categoria: "gov" | "web" | "mobile";
-    stack_tecnica: string[];
-    image_url: string | null;
-    link: string | null;
-    created_at: string;
-};
-
-export type Product = {
-    id: string;
-    titulo: string;
-    descricao: string;
-    tipo: "script" | "automacao" | "ebook";
-    preco: string | null;
-    info_tecnica: string | null;
-    whatsapp_link: string | null;
-    image_url: string | null;
-    created_at: string;
-};
+export type { Product, Project, Company };
 
 export type Lead = {
     id: string;
@@ -61,12 +41,12 @@ export async function getProjects(): Promise<Project[]> {
     return data ?? [];
 }
 
-export async function getProjectById(id: string): Promise<Project | null> {
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("projects")
         .select("*")
-        .eq("id", id)
+        .eq("slug", slug)
         .single();
 
     if (error) {
@@ -90,12 +70,12 @@ export async function getProducts(): Promise<Product[]> {
     return data ?? [];
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
+export async function getProductBySlug(slug: string): Promise<Product | null> {
     const supabase = await createClient();
     const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("id", id)
+        .eq("slug", slug)
         .single();
 
     if (error) {
@@ -103,6 +83,20 @@ export async function getProductById(id: string): Promise<Product | null> {
         return null;
     }
     return data;
+}
+
+export async function getCompanies(): Promise<Company[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from("companies")
+        .select("*")
+        .order("ordem", { ascending: true });
+
+    if (error) {
+        console.error("Error fetching companies:", error);
+        return [];
+    }
+    return data ?? [];
 }
 
 export async function getLeads(): Promise<Lead[]> {

@@ -10,25 +10,32 @@ import {
 } from "@/components/ui/card";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
-import type { Project } from "@/lib/queries";
+import type { Project } from "@/lib/types";
 
 const categoriaLabels: Record<string, string> = {
     gov: "Governo & Saúde",
     web: "Web",
     mobile: "Mobile",
+    saude: "Saúde",
+    privado: "Privado",
 };
 
 const categoriaColors: Record<string, string> = {
     gov: "bg-blue-50 text-blue-700 border-blue-200",
     web: "bg-violet-50 text-violet-700 border-violet-200",
     mobile: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    saude: "bg-teal-50 text-teal-700 border-teal-200",
+    privado: "bg-gray-50 text-gray-700 border-gray-200",
 };
 
 export function ProjectCard({ project }: { project: Project }) {
+    // Use portfolio path according to TASKS.md
+    const linkHref = project.slug ? `/portfolio/${project.slug}` : `/portfolio/${project.id}`;
+
     return (
         <Card className="group relative flex h-full flex-col overflow-hidden border border-border transition-all duration-300 hover:border-blue-accent/30 hover:shadow-lg">
             {/* Stretched Link for main card click */}
-            <Link href={`/projetos/${project.id}`} className="absolute inset-0 z-0" prefetch={false}>
+            <Link href={linkHref} className="absolute inset-0 z-0" prefetch={false}>
                 <span className="sr-only">Ver detalhes de {project.titulo}</span>
             </Link>
 
@@ -80,7 +87,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
             <CardContent className="mt-auto">
                 <div className="flex flex-wrap gap-1.5">
-                    {project.stack_tecnica.map((tech) => (
+                    {project.stack_tecnica && project.stack_tecnica.map((tech) => (
                         <Badge
                             key={tech}
                             variant="secondary"
